@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Vendor Onboarding — Application Received</title>
+
+    <!--[if mso]>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+    <style>
+      table {border-collapse: collapse;}
+      td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", Arial, sans-serif !important;}
+    </style>
+    <![endif]-->
+
+    <style>
+        body, p, h1, h2, h3, h4, h5, h6 { margin: 0; padding: 0; }
+        body, table, td, p, a, li, blockquote { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table { border-spacing: 0; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+
+        @media screen and (max-width: 600px) {
+            .email-container { width: 100% !important; margin: auto !important; }
+            .fluid-pad { padding: 24px 20px !important; }
+            .fluid-pad-header { padding: 30px 20px 24px !important; }
+        }
+    </style>
+</head>
+<body width="100%" style="margin: 0; padding: 0; background-color: #f0f4f8; font-family: 'Segoe UI', Helvetica, Arial, sans-serif;">
+
+    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+        Thank you for submitting your vendor registration. Your application is now under review...
+    </div>
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="background-color: #f0f4f8;">
+        <tr>
+            <td align="center" style="padding: 40px 16px;">
+
+                <!--[if mso | IE]>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="580" align="center" style="width: 580px;">
+                <tr><td>
+                <![endif]-->
+
+                <table role="presentation" class="email-container" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 580px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td class="fluid-pad-header" align="center" style="background: linear-gradient(135deg, #1a56db 0%, #0e3fa8 100%); padding: 36px 40px 32px; text-align: center;">
+                            <div style="display: inline-block; width: 56px; height: 56px; background-color: rgba(255,255,255,0.15); border-radius: 50%; line-height: 56px; font-size: 26px; color: #ffffff; margin-bottom: 16px;">📋</div>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: -0.3px;">Application Received</h1>
+                            <p style="margin: 8px 0 0; color: #e2e8f0; font-size: 14px;">Your vendor registration is under review</p>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td class="fluid-pad" style="padding: 36px 40px 28px;">
+
+                            <p style="margin: 0 0 20px; color: #1e293b; font-size: 15px; line-height: 1.6;">
+                                Dear <strong>{{ doc.supplier_name }}</strong>,
+                            </p>
+
+                            <p style="margin: 0 0 24px; color: #475569; font-size: 15px; line-height: 1.7;">
+                                Thank you for submitting your vendor registration application. We have received the details for <strong>{{ doc.company_name }}</strong> and our team will begin reviewing them shortly.
+                            </p>
+
+                            <!-- Details Box -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8faff; border: 1px solid #dbeafe; border-radius: 8px; margin-bottom: 28px;">
+                                <tr>
+                                    <td style="padding: 20px 24px;">
+                                        <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8;">Application Summary</p>
+
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; width: 40%;">
+                                                    <span style="font-size: 13px; color: #64748b; font-weight: 500;">Application ID</span>
+                                                </td>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                                                    <span style="font-size: 13px; color: #1e293b; font-weight: 600;">{{ doc.name }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                                                    <span style="font-size: 13px; color: #64748b; font-weight: 500;">Company</span>
+                                                </td>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                                                    <span style="font-size: 13px; color: #1e293b; font-weight: 600;">{{ doc.company_name }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                                                    <span style="font-size: 13px; color: #64748b; font-weight: 500;">Category</span>
+                                                </td>
+                                                <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                                                    <span style="font-size: 13px; color: #1e293b; font-weight: 600;">{{ doc.vendor_category }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0;">
+                                                    <span style="font-size: 13px; color: #64748b; font-weight: 500;">Status</span>
+                                                </td>
+                                                <td style="padding: 8px 0;">
+                                                    <span style="display: inline-block; background-color: #fef9c3; color: #854d0e; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px;">● UNDER REVIEW</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 0 0 12px; color: #475569; font-size: 15px; line-height: 1.7;">
+                                Our procurement team will evaluate your application and you will be notified once a decision has been made. You may check the status of your application at any time through the portal.
+                            </p>
+
+                            <p style="margin: 0 0 28px; color: #94a3b8; font-size: 13px; line-height: 1.6;">
+                                <strong>What happens next?</strong><br>
+                                Your application will be reviewed within <strong>7&ndash;14 business days</strong>. If any additional information is required, our team will contact you at this email address.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                        <td style="padding: 0 40px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr><td style="border-top: 1px solid #e2e8f0; font-size: 1px; line-height: 1px;">&nbsp;</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="fluid-pad" style="padding: 24px 40px 32px;">
+                            <p style="margin: 0 0 4px; color: #1e293b; font-size: 14px; font-weight: 600;">Vendor Management Team</p>
+                            <p style="margin: 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">This is an automated acknowledgement from {{ company }}. Please do not reply directly to this email.</p>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <!--[if mso | IE]>
+                </td></tr></table>
+                <![endif]-->
+
+                <p style="margin: 20px 0 0; color: #94a3b8; font-size: 12px; text-align: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif;">
+                    &copy; {{ frappe.utils.nowdate().split('-')[0] }} {{ company }}. All rights reserved.
+                </p>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
