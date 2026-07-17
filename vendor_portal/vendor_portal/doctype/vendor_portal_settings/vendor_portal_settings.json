@@ -1,0 +1,149 @@
+{
+ "actions": [],
+ "creation": "2026-06-20 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "auto_create_supplier",
+  "default_supplier_group",
+  "require_gst_verification",
+  "min_documents_required",
+  "section_break_iypy",
+  "rating_weights_section",
+  "rating_weight_delivery",
+  "rating_weight_quality",
+  "rating_weight_pricing",
+  "rating_weight_communication",
+  "column_break_iidv",
+  "auto_rating_enabled",
+  "low_rating_threshold"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_create_supplier",
+   "fieldtype": "Check",
+   "label": "Auto Create Supplier"
+  },
+  {
+   "fieldname": "default_supplier_group",
+   "fieldtype": "Link",
+   "label": "Default Supplier Group",
+   "options": "Supplier Group"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_gst_verification",
+   "fieldtype": "Check",
+   "label": "Require GST Verification"
+  },
+  {
+   "default": "2",
+   "fieldname": "min_documents_required",
+   "fieldtype": "Int",
+   "label": "Minimum Documents Required"
+  },
+  {
+   "fieldname": "section_break_iypy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rating_weights_section",
+   "fieldtype": "Section Break",
+   "label": "Rating Weights (Deprecated)"
+  },
+  {
+   "default": "0.3",
+   "fieldname": "rating_weight_delivery",
+   "fieldtype": "Float",
+   "label": "Rating Weight - Delivery (Deprecated)",
+   "description": "DEPRECATED \u2014 Use Supplier Scorecard criteria weights instead."
+  },
+  {
+   "default": "0.3",
+   "fieldname": "rating_weight_quality",
+   "fieldtype": "Float",
+   "label": "Rating Weight - Quality (Deprecated)",
+   "description": "DEPRECATED \u2014 Use Supplier Scorecard criteria weights instead."
+  },
+  {
+   "default": "0.2",
+   "fieldname": "rating_weight_pricing",
+   "fieldtype": "Float",
+   "label": "Rating Weight - Pricing (Deprecated)",
+   "description": "DEPRECATED \u2014 Use Supplier Scorecard criteria weights instead."
+  },
+  {
+   "default": "0.2",
+   "fieldname": "rating_weight_communication",
+   "fieldtype": "Float",
+   "label": "Rating Weight - Communication (Deprecated)",
+   "description": "DEPRECATED \u2014 Use Supplier Scorecard criteria weights instead."
+  },
+  {
+   "fieldname": "column_break_iidv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_rating_enabled",
+   "fieldtype": "Check",
+   "label": "Auto Rating Enabled"
+  },
+  {
+   "default": "2.5",
+   "fieldname": "low_rating_threshold",
+   "fieldtype": "Float",
+   "label": "Low Rating Threshold"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-20 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Vendor Portal",
+ "name": "Vendor Portal Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "if_owner": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 0,
+   "write": 1
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "if_owner": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 0,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
