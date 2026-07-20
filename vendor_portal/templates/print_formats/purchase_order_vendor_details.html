@@ -1,0 +1,221 @@
+<!--
+  Print Format: Purchase Order with Vendor Details
+  Template: vendor_portal/templates/print_formats/purchase_order_vendor_details.html
+
+  To use this template:
+  1. Go to Setup > Printing > Print Format
+  2. Create "Purchase Order Vendor Details" with:
+     - DocType: Purchase Order
+     - Format Type: HTML
+     - HTML: {% include "vendor_portal/templates/print_formats/purchase_order_vendor_details.html" %}
+-->
+
+<style>
+	.print-format {
+		padding: 10mm 15mm;
+		font-size: 10pt;
+	}
+	.print-format table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 9pt;
+	}
+	.print-format table th,
+	.print-format table td {
+		padding: 6px 8px;
+		border: 1px solid #d1d8dd;
+	}
+	.print-format table th {
+		background-color: #f5f7fa;
+		text-align: left;
+		font-weight: 600;
+	}
+	.vendor-section {
+		margin: 15px 0;
+		padding: 12px;
+		border: 1px solid #d1d8dd;
+		border-radius: 4px;
+		background-color: #fafbfc;
+	}
+	.vendor-section h5 {
+		margin: 0 0 8px 0;
+		font-size: 10pt;
+		font-weight: 600;
+		color: #334143;
+	}
+	.vendor-section .row {
+		margin: 4px 0;
+	}
+	.vendor-section .label {
+		font-weight: 600;
+		color: #6c7680;
+		min-width: 140px;
+		display: inline-block;
+	}
+	.stars {
+		color: #f5a623;
+		font-size: 12pt;
+		letter-spacing: 2px;
+	}
+	.low-rating-note {
+		margin-top: 10px;
+		padding: 8px 12px;
+		background-color: #fff3cd;
+		border: 1px solid #ffeeba;
+		border-radius: 4px;
+		color: #856404;
+		font-size: 9pt;
+	}
+	.header-title {
+		font-size: 16pt;
+		font-weight: 700;
+		color: #334143;
+		margin-bottom: 20px;
+	}
+	.summary-table td:first-child {
+		width: 160px;
+		font-weight: 600;
+		color: #6c7680;
+		border: none;
+	}
+	.summary-table td {
+		border: none;
+		padding: 3px 8px;
+	}
+	.total-row {
+		font-weight: 700;
+		font-size: 11pt;
+		background-color: #f5f7fa;
+	}
+</style>
+
+{% set vendor = frappe.db.get_value("Supplier", doc.supplier, [
+	"custom_vendor_category",
+	"custom_vendor_rating",
+	"custom_total_rating_count",
+	"custom_is_blacklisted",
+	"custom_blacklist_reason",
+], as_dict=1) %}
+
+<div class="header-title">{{ _("Purchase Order") }} — {{ doc.name }}</div>
+
+<!-- Standard PO summary -->
+<table class="summary-table">
+	<tr>
+		<td>{{ _("Supplier") }}</td>
+		<td><strong>{{ doc.supplier_name }}</strong></td>
+	</tr>
+	<tr>
+		<td>{{ _("Company") }}</td>
+		<td>{{ doc.company }}</td>
+	</tr>
+	<tr>
+		<td>{{ _("Transaction Date") }}</td>
+		<td>{{ frappe.utils.formatdate(doc.transaction_date, "medium") }}</td>
+	</tr>
+	<tr>
+		<td>{{ _("Required By") }}</td>
+		<td>{{ frappe.utils.formatdate(doc.schedule_date, "medium") if doc.schedule_date else "—" }}</td>
+	</tr>
+	<tr>
+		<td>{{ _("Status") }}</td>
+		<td>{{ doc.status }}</td>
+	</tr>
+</table>
+
+<!-- Vendor Details Section -->
+<div class="vendor-section">
+	<h5>{{ _("Vendor Details") }}</h5>
+	<div class="row">
+		<span class="label">{{ _("Vendor Category") }}:</span>
+		<span>{{ vendor.custom_vendor_category if vendor and vendor.custom_vendor_category else _("Not specified") }}</span>
+	</div>
+	<div class="row">
+		<span class="label">{{ _("Vendor Rating") }}:</span>
+		<span class="stars">
+			{{ vendor.custom_vendor_rating | stars if vendor and vendor.custom_vendor_rating is not none else _("No ratings yet") }}
+		</span>
+		{% if vendor and vendor.custom_vendor_rating is not none %}
+			{% set rating = vendor.custom_vendor_rating | float * 5 %}
+			<span style="margin-left: 8px; color: #6c7680;">
+				({{ "%.1f" | format(rating) }} / 5
+				{%- if vendor.custom_total_rating_count %} — {{ vendor.custom_total_rating_count }} {{ _("ratings") }}{% endif %})
+			</span>
+		{% endif %}
+	</div>
+
+	{% if vendor and vendor.custom_is_blacklisted %}
+	<div class="low-rating-note" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
+		<strong>{{ _("BLACKLISTED") }}:</strong>
+		{{ vendor.custom_blacklist_reason or _("No reason provided.") }}
+	</div>
+	{% elif vendor and vendor.custom_vendor_rating is not none and (vendor.custom_vendor_rating | float * 5) < 3 %}
+	<div class="low-rating-note">
+		<strong>{{ _("Note") }}:</strong>
+		{{ _("This supplier has a low vendor rating. Consider reviewing vendor performance before proceeding.") }}
+	</div>
+	{% endif %}
+</div>
+
+<!-- Items Table -->
+<table>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>{{ _("Item Code") }}</th>
+			<th>{{ _("Item Name") }}</th>
+			<th class="text-right">{{ _("Qty") }}</th>
+			<th class="text-right">{{ _("Rate") }}</th>
+			<th class="text-right">{{ _("Amount") }}</th>
+			<th class="text-right">{{ _("Received") }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in doc.items %}
+		<tr>
+			<td>{{ item.idx }}</td>
+			<td>{{ item.item_code }}</td>
+			<td>{{ item.item_name }}</td>
+			<td class="text-right">{{ frappe.utils.flt(item.qty, 2) }}</td>
+			<td class="text-right">{{ frappe.utils.fmt_money(item.rate, currency=doc.currency) }}</td>
+			<td class="text-right">{{ frappe.utils.fmt_money(item.amount, currency=doc.currency) }}</td>
+			<td class="text-right">{{ frappe.utils.flt(item.received_qty, 2) if item.received_qty else "0" }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<!-- Totals -->
+<table style="margin-top: 15px; width: 300px; margin-left: auto;">
+	<tr>
+		<td style="border: none; text-align: right; font-weight: 600;">{{ _("Net Total") }}</td>
+		<td style="border: none; text-align: right;">{{ frappe.utils.fmt_money(doc.net_total, currency=doc.currency) }}</td>
+	</tr>
+	{% if doc.discount_amount %}
+	<tr>
+		<td style="border: none; text-align: right; font-weight: 600;">{{ _("Discount") }}</td>
+		<td style="border: none; text-align: right;">-{{ frappe.utils.fmt_money(doc.discount_amount, currency=doc.currency) }}</td>
+	</tr>
+	{% endif %}
+	<tr>
+		<td style="border: none; text-align: right; font-weight: 600;">{{ _("Taxes & Charges") }}</td>
+		<td style="border: none; text-align: right;">{{ frappe.utils.fmt_money(doc.total_taxes_and_charges, currency=doc.currency) }}</td>
+	</tr>
+	<tr class="total-row">
+		<td style="border: none; text-align: right; font-weight: 700;">{{ _("Grand Total") }}</td>
+		<td style="border: none; text-align: right; font-weight: 700;">{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>
+	</tr>
+</table>
+
+<!-- Terms -->
+{% if doc.terms %}
+<div style="margin-top: 20px;">
+	<h5 style="font-size: 10pt; font-weight: 600; margin-bottom: 5px;">{{ _("Terms") }}</h5>
+	<div>{{ doc.terms }}</div>
+</div>
+{% endif %}
+
+<!-- Footer -->
+<div style="margin-top: 30px; font-size: 8pt; color: #8d99a6; text-align: center; border-top: 1px solid #d1d8dd; padding-top: 10px;">
+	{{ _("Printed from") }} {{ doc.company }} &mdash; {{ frappe.utils.formatdate(frappe.utils.nowdate(), "medium") }}
+</div>

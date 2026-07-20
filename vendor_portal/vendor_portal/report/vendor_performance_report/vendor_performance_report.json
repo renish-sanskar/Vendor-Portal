@@ -1,0 +1,48 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {"fieldname": "supplier_name", "label": "Supplier Name", "fieldtype": "Link", "options": "Supplier", "width": 180},
+  {"fieldname": "vendor_category", "label": "Vendor Category", "fieldtype": "Data", "width": 140},
+  {"fieldname": "total_pos", "label": "Total POs", "fieldtype": "Int", "width": 100},
+  {"fieldname": "total_po_value", "label": "Total PO Value", "fieldtype": "Currency", "width": 140},
+  {"fieldname": "scorecard_score", "label": "Scorecard Score", "fieldtype": "Float", "width": 120},
+  {"fieldname": "scorecard_status", "label": "Scorecard Status", "fieldtype": "Data", "width": 130},
+  {"fieldname": "avg_delivery_score", "label": "Avg Delivery Score", "fieldtype": "Float", "width": 140},
+  {"fieldname": "avg_quality_score", "label": "Avg Quality Score", "fieldtype": "Float", "width": 140},
+  {"fieldname": "avg_pricing_score", "label": "Avg Pricing Score", "fieldtype": "Float", "width": 140},
+  {"fieldname": "overall_rating", "label": "Custom Rating", "fieldtype": "Float", "width": 120},
+  {"fieldname": "total_receipts", "label": "Total Receipts", "fieldtype": "Int", "width": 120},
+  {"fieldname": "on_time_delivery_pct", "label": "On-Time Delivery %", "fieldtype": "Float", "width": 150},
+  {"fieldname": "short_delivery_count", "label": "Short Delivery Count", "fieldtype": "Int", "width": 150}
+ ],
+ "creation": "2026-06-23 12:00:00.000000",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {"fieldname": "vendor_category", "label": "Vendor Category", "fieldtype": "Link", "options": "Vendor Category"},
+  {"fieldname": "supplier", "label": "Supplier", "fieldtype": "Link", "options": "Supplier"},
+  {"fieldname": "from_date", "label": "From Date", "fieldtype": "Date"},
+  {"fieldname": "to_date", "label": "To Date", "fieldtype": "Date"},
+  {"fieldname": "minimum_rating", "label": "Minimum Rating", "fieldtype": "Float", "default": 0}
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": null,
+ "modified": "2026-06-25 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Vendor Portal",
+ "name": "Vendor Performance Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "Supplier",
+ "report_name": "Vendor Performance Report",
+ "report_type": "Script Report",
+ "roles": [
+  {"role": "System Manager"},
+  {"role": "Purchase Manager"},
+  {"role": "Vendor Manager"}
+ ],
+ "timeout": 0
+}
