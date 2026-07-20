@@ -1,0 +1,902 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Vendor Comparison Matrix — Premium Page Styles
+   Frappe-aware: uses --card-bg, --border-color, --text-color CSS vars so it
+   works in both light and dark themes.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.vcm-root {
+	padding: 24px;
+	max-width: 1500px;
+	margin: 0 auto;
+	font-family: var(--font-stack, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+}
+
+/* ── Hero search bar ─────────────────────────────────────────────────────── */
+.vcm-hero {
+	background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+	border: 1px solid rgba(0,0,0,0.04);
+	border-radius: 16px;
+	padding: 36px 40px;
+	margin-bottom: 28px;
+	position: relative;
+	overflow: visible; /* must NOT be hidden — dropdown escapes the hero */
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.vcm-hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(ellipse at top right, rgba(59, 130, 246, 0.05) 0%, transparent 65%);
+	pointer-events: none;
+}
+
+.vcm-hero-title {
+	margin: 0 0 6px;
+	font-size: 22px;
+	font-weight: 700;
+	color: #0f172a;
+	letter-spacing: -0.3px;
+}
+
+.vcm-hero-subtitle {
+	font-size: 13px;
+	color: #475569;
+	margin: 0 0 24px;
+}
+
+.vcm-search-row {
+	display: flex;
+	gap: 12px;
+	align-items: flex-end;
+	flex-wrap: wrap;
+}
+
+.vcm-search-label {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.7px;
+	text-transform: uppercase;
+	color: #64748b;
+	margin-bottom: 6px;
+}
+
+.vcm-search-field {
+	flex: 1;
+	min-width: 260px;
+	position: relative;
+}
+
+/* Frappe wraps the control in .frappe-control > .form-group */
+.vcm-search-field .frappe-control,
+.vcm-search-field .form-group {
+	margin-bottom: 0 !important;
+	padding: 0 !important;
+}
+
+/* Frappe 16 link control wraps input in .control-input-wrapper */
+.vcm-search-field .control-input-wrapper {
+	position: relative;
+}
+
+/* The actual input element — cover all Frappe class combos */
+.vcm-search-field input.form-control,
+.vcm-search-field input.input-with-feedback,
+.vcm-search-field .control-input input {
+	background: #ffffff !important;
+	border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
+	border-radius: 10px !important;
+	color: #0f172a !important;
+	height: 44px !important;
+	line-height: 44px !important;
+	padding: 0 40px 0 14px !important;
+	font-size: 14px !important;
+	transition: background 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+}
+
+.vcm-search-field input.form-control::placeholder,
+.vcm-search-field input.input-with-feedback::placeholder {
+	color: #94a3b8 !important;
+}
+
+.vcm-search-field input.form-control:focus,
+.vcm-search-field input.input-with-feedback:focus,
+.vcm-search-field .control-input input:focus {
+	background: #ffffff !important;
+	border-color: #3b82f6 !important;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+	outline: none !important;
+}
+
+/* Hide the grey link/clear icon buttons that sit next to the input */
+.vcm-search-field .link-btn,
+.vcm-search-field .btn-open,
+.vcm-search-field .btn-xs.link-btn {
+	background: transparent !important;
+	border: none !important;
+	color: #94a3b8 !important;
+	padding: 0 8px !important;
+}
+
+.vcm-search-field .link-btn:hover,
+.vcm-search-field .btn-open:hover {
+	color: #0f172a !important;
+}
+
+/* Frappe 16 uses .input-group for the link field wrapper */
+.vcm-search-field .input-group {
+	border-radius: 10px !important;
+	overflow: visible !important;
+}
+
+.vcm-search-field .input-group-btn .btn {
+	background: transparent !important;
+	border-color: transparent !important;
+	color: #94a3b8 !important;
+	height: 44px !important;
+}
+
+/* Awesomplete autocomplete dropdown — scoped to field wrapper */
+.vcm-search-field .awesomplete {
+	width: 100%;
+	display: block !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL dropdown override
+   Frappe's awesomplete <ul> is injected as a direct child of .awesomplete
+   which sits inside #vcm-item-field-wrap — our MutationObserver tags it
+   with [data-vcm-dropdown]. We also scope by #vcm-item-field-wrap as
+   a fallback in case the attribute hasn't been applied yet.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The dropdown container ─────────────────────────────────────────────── */
+ul[data-vcm-dropdown],
+#vcm-item-field-wrap .awesomplete > ul,
+.vcm-search-field .awesomplete > ul {
+	background: #0f1f33 !important;
+	border: 1.5px solid rgba(99, 179, 237, 0.5) !important;
+	border-radius: 14px !important;
+	margin-top: 6px !important;
+	padding: 6px !important;
+	box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+	z-index: 99999 !important;
+	min-width: 440px !important;
+	max-height: 380px !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+}
+
+/* ── Every list item ────────────────────────────────────────────────────── */
+ul[data-vcm-dropdown] > li,
+#vcm-item-field-wrap .awesomplete > ul > li,
+.vcm-search-field .awesomplete > ul > li {
+	background: transparent !important;  /* kill browser-default white bg */
+	color: #ffffff !important;
+	padding: 12px 16px !important;
+	font-size: 14px !important;
+	line-height: 1.5 !important;
+	border-radius: 8px !important;
+	cursor: pointer !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+	margin: 1px 0 !important;
+}
+
+ul[data-vcm-dropdown] > li:last-child,
+#vcm-item-field-wrap .awesomplete > ul > li:last-child,
+.vcm-search-field .awesomplete > ul > li:last-child {
+	border-bottom: none !important;
+}
+
+/* ── Force ALL child text elements to white ─────────────────────────────── */
+/* Frappe renders: <li><strong>Item Name</strong><br><small>desc</small></li>
+   or:            <li>Item Name\nItem Name, All Item Groups</li>
+   We must override every possible child tag.                               */
+ul[data-vcm-dropdown] > li *,
+#vcm-item-field-wrap .awesomplete > ul > li *,
+.vcm-search-field .awesomplete > ul > li * {
+	color: #ffffff !important;
+	background: transparent !important;
+}
+
+/* ── Subtitle / description line (second line in each result) ───────────── */
+ul[data-vcm-dropdown] > li p,
+ul[data-vcm-dropdown] > li small,
+ul[data-vcm-dropdown] > li .small,
+#vcm-item-field-wrap .awesomplete > ul > li p,
+#vcm-item-field-wrap .awesomplete > ul > li small,
+.vcm-search-field .awesomplete > ul > li p,
+.vcm-search-field .awesomplete > ul > li small {
+	color: rgba(200, 225, 255, 0.60) !important;
+	font-size: 12px !important;
+	margin: 2px 0 0 !important;
+	display: block !important;
+}
+
+/* ── Hover & keyboard-selected state ───────────────────────────────────── */
+ul[data-vcm-dropdown] > li:hover,
+ul[data-vcm-dropdown] > li[aria-selected="true"],
+#vcm-item-field-wrap .awesomplete > ul > li:hover,
+#vcm-item-field-wrap .awesomplete > ul > li[aria-selected="true"],
+.vcm-search-field .awesomplete > ul > li:hover,
+.vcm-search-field .awesomplete > ul > li[aria-selected="true"] {
+	background: rgba(59, 130, 246, 0.32) !important;
+	color: #ffffff !important;
+}
+
+/* ensure children also inherit the hover state bg correctly */
+ul[data-vcm-dropdown] > li:hover *,
+ul[data-vcm-dropdown] > li[aria-selected="true"] *,
+#vcm-item-field-wrap .awesomplete > ul > li:hover *,
+#vcm-item-field-wrap .awesomplete > ul > li[aria-selected="true"] * {
+	background: transparent !important;
+	color: #ffffff !important;
+}
+
+/* ── Highlighted match text (typed characters) ──────────────────────────── */
+ul[data-vcm-dropdown] > li mark,
+#vcm-item-field-wrap .awesomplete > ul > li mark,
+.vcm-search-field .awesomplete > ul > li mark {
+	background: transparent !important;
+	color: #60a5fa !important;
+	font-weight: 700 !important;
+}
+
+/* ── Custom scrollbar ───────────────────────────────────────────────────── */
+ul[data-vcm-dropdown]::-webkit-scrollbar,
+#vcm-item-field-wrap .awesomplete > ul::-webkit-scrollbar,
+.vcm-search-field .awesomplete > ul::-webkit-scrollbar {
+	width: 5px;
+}
+
+ul[data-vcm-dropdown]::-webkit-scrollbar-track,
+#vcm-item-field-wrap .awesomplete > ul::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+ul[data-vcm-dropdown]::-webkit-scrollbar-thumb,
+#vcm-item-field-wrap .awesomplete > ul::-webkit-scrollbar-thumb {
+	background: rgba(99, 179, 237, 0.4);
+	border-radius: 3px;
+}
+
+/* Remove the label Frappe auto-injects inside .frappe-control */
+.vcm-search-field .frappe-control .control-label {
+	display: none !important;
+}
+
+.vcm-btn-compare {
+	height: 44px;
+	padding: 0 28px;
+	background: linear-gradient(135deg, #3b82f6, #2563eb);
+	border: none;
+	border-radius: 10px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+	white-space: nowrap;
+	box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.vcm-btn-compare:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 20px rgba(59, 130, 246, 0.55);
+	background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.vcm-btn-compare:active {
+	transform: translateY(0);
+}
+
+.vcm-btn-compare svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* ── Loading state ──────────────────────────────────────────────────────── */
+.vcm-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 64px 20px;
+	gap: 16px;
+	color: var(--text-muted);
+}
+
+.vcm-spinner {
+	width: 44px;
+	height: 44px;
+	border: 3px solid var(--border-color);
+	border-top-color: #3b82f6;
+	border-radius: 50%;
+	animation: vcm-spin 0.8s linear infinite;
+}
+
+@keyframes vcm-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* ── Empty/Error states ─────────────────────────────────────────────────── */
+.vcm-empty {
+	text-align: center;
+	padding: 80px 20px;
+	color: var(--text-muted);
+}
+
+.vcm-empty-icon {
+	font-size: 52px;
+	margin-bottom: 16px;
+	opacity: 0.4;
+}
+
+.vcm-empty h3 {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 8px;
+	color: var(--heading-color, var(--text-color));
+}
+
+.vcm-empty p {
+	font-size: 13px;
+	margin: 0;
+}
+
+/* ── Results header ─────────────────────────────────────────────────────── */
+.vcm-results-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.vcm-results-title {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--heading-color, var(--text-color));
+}
+
+.vcm-results-meta {
+	font-size: 12px;
+	color: var(--text-muted);
+}
+
+.vcm-sort-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.vcm-sort-label {
+	font-size: 12px;
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.vcm-sort-btn {
+	padding: 5px 12px;
+	font-size: 12px;
+	font-weight: 500;
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	background: var(--card-bg);
+	color: var(--text-color);
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.vcm-sort-btn:hover,
+.vcm-sort-btn.active {
+	background: #3b82f6;
+	border-color: #3b82f6;
+	color: #fff;
+}
+
+/* ── Comparison Table ────────────────────────────────────────────────────── */
+.vcm-table-wrap {
+	overflow-x: auto;
+	border-radius: 14px;
+	border: 1px solid var(--border-color);
+	box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+.vcm-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: var(--card-bg);
+	font-size: 13px;
+}
+
+/* sticky first column */
+.vcm-table th:first-child,
+.vcm-table td:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 2;
+	background: var(--card-bg);
+}
+
+.vcm-table th:first-child {
+	z-index: 3;
+}
+
+.vcm-table thead th {
+	background: var(--subtle-bg, var(--card-bg));
+	padding: 12px 16px;
+	text-align: left;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.7px;
+	color: var(--text-muted);
+	border-bottom: 2px solid var(--border-color);
+	white-space: nowrap;
+}
+
+.vcm-table thead th.col-num {
+	text-align: center;
+}
+
+.vcm-table tbody tr {
+	border-bottom: 1px solid var(--border-color);
+	transition: background 0.15s;
+}
+
+.vcm-table tbody tr:last-child {
+	border-bottom: none;
+}
+
+.vcm-table tbody tr:hover {
+	background: var(--subtle-fg, rgba(59,130,246,0.04));
+}
+
+.vcm-table tbody tr:hover td:first-child {
+	background: var(--subtle-fg, rgba(59,130,246,0.04));
+}
+
+.vcm-table td {
+	padding: 14px 16px;
+	vertical-align: middle;
+}
+
+.vcm-table td.col-num {
+	text-align: center;
+}
+
+/* ── Rank badge ─────────────────────────────────────────────────────────── */
+.vcm-rank {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.vcm-rank.rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
+.vcm-rank.rank-2 { background: linear-gradient(135deg, #9ca3af, #6b7280); color: #fff; }
+.vcm-rank.rank-3 { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; }
+.vcm-rank.rank-n { background: var(--border-color); color: var(--text-muted); }
+
+/* ── Supplier name cell ─────────────────────────────────────────────────── */
+.vcm-supplier-cell {
+	min-width: 200px;
+}
+
+.vcm-supplier-name {
+	font-weight: 600;
+	color: var(--text-color);
+	display: block;
+	margin-bottom: 2px;
+}
+
+.vcm-supplier-link {
+	font-size: 11px;
+	color: #3b82f6;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.vcm-supplier-link:hover {
+	text-decoration: underline;
+}
+
+.vcm-category-badge {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 600;
+	padding: 2px 7px;
+	border-radius: 20px;
+	background: rgba(99,179,237,0.12);
+	color: #3b82f6;
+	margin-top: 4px;
+}
+
+/* ── Price cells ────────────────────────────────────────────────────────── */
+.vcm-price {
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--text-color);
+}
+
+.vcm-price-best {
+	color: #059669;
+}
+
+.vcm-price-worst {
+	color: #dc2626;
+}
+
+.vcm-price-diff {
+	font-size: 11px;
+	color: var(--text-muted);
+	margin-top: 1px;
+}
+
+.vcm-price-diff.cheaper { color: #059669; }
+.vcm-price-diff.pricier { color: #dc2626; }
+
+/* ── Sparkline / price history ──────────────────────────────────────────── */
+.vcm-sparkline-wrap {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 120px;
+}
+
+.vcm-sparkline-svg {
+	width: 120px;
+	height: 36px;
+	display: block;
+}
+
+.vcm-spark-label {
+	font-size: 10px;
+	color: var(--text-muted);
+}
+
+/* ── Star rating ────────────────────────────────────────────────────────── */
+.vcm-stars {
+	display: flex;
+	gap: 2px;
+	align-items: center;
+}
+
+.vcm-star {
+	font-size: 13px;
+	color: #d1d5db;
+}
+
+.vcm-star.filled { color: #f59e0b; }
+.vcm-star.half { color: #fbbf24; }
+
+.vcm-rating-num {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-muted);
+	margin-left: 4px;
+}
+
+/* ── Score bar ──────────────────────────────────────────────────────────── */
+.vcm-score-bar-wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 100px;
+}
+
+.vcm-score-bar-track {
+	flex: 1;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--border-color);
+	overflow: hidden;
+}
+
+.vcm-score-bar-fill {
+	height: 100%;
+	border-radius: 3px;
+	transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vcm-score-bar-fill.excellent { background: linear-gradient(90deg, #10b981, #059669); }
+.vcm-score-bar-fill.good      { background: linear-gradient(90deg, #34d399, #10b981); }
+.vcm-score-bar-fill.average   { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.vcm-score-bar-fill.poor      { background: linear-gradient(90deg, #f87171, #dc2626); }
+
+.vcm-score-num {
+	font-size: 12px;
+	font-weight: 700;
+	min-width: 28px;
+	text-align: right;
+	color: var(--text-color);
+}
+
+/* ── Delivery badge ─────────────────────────────────────────────────────── */
+.vcm-delivery-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.vcm-delivery-badge.excellent { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.vcm-delivery-badge.good      { background: rgba(52, 211, 153, 0.12); color: #10b981; }
+.vcm-delivery-badge.average   { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.vcm-delivery-badge.poor      { background: rgba(239, 68, 68, 0.12);  color: #dc2626; }
+
+.vcm-delivery-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+/* ── Scorecard status pill ──────────────────────────────────────────────── */
+.vcm-status-pill {
+	display: inline-block;
+	padding: 3px 10px;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.vcm-status-pill.green  { background: rgba(16,185,129,0.12); color: #059669; }
+.vcm-status-pill.orange { background: rgba(245,158,11,0.12);  color: #d97706; }
+.vcm-status-pill.red    { background: rgba(239,68,68,0.12);   color: #dc2626; }
+.vcm-status-pill.grey   { background: rgba(156,163,175,0.12); color: #6b7280; }
+
+/* ── Detail Dialog ───────────────────────────────────────────────────────── */
+.vcm-dialog-body {
+	padding: 0;
+}
+
+.vcm-dialog-supplier-header {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 24px 24px 20px;
+	background: linear-gradient(135deg, #1e3a5f 0%, #0f2240 100%);
+	border-radius: 10px 10px 0 0;
+}
+
+.vcm-dialog-avatar {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 22px;
+	font-weight: 700;
+	color: #fff;
+	flex-shrink: 0;
+}
+
+.vcm-dialog-supplier-name {
+	font-size: 18px;
+	font-weight: 700;
+	color: #e2f0ff;
+	margin: 0 0 4px;
+}
+
+.vcm-dialog-supplier-meta {
+	font-size: 12px;
+	color: rgba(200,220,255,0.6);
+}
+
+.vcm-dialog-tabs {
+	display: flex;
+	border-bottom: 1px solid var(--border-color);
+	padding: 0 24px;
+	gap: 2px;
+}
+
+.vcm-dialog-tab {
+	padding: 12px 18px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--text-muted);
+	cursor: pointer;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	transition: all 0.15s;
+	white-space: nowrap;
+}
+
+.vcm-dialog-tab:hover {
+	color: var(--text-color);
+}
+
+.vcm-dialog-tab.active {
+	color: #3b82f6;
+	border-bottom-color: #3b82f6;
+	font-weight: 600;
+}
+
+.vcm-dialog-panel {
+	padding: 24px;
+	display: none;
+}
+
+.vcm-dialog-panel.active {
+	display: block;
+}
+
+/* Metrics grid inside dialog */
+.vcm-metric-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.vcm-metric-card {
+	background: var(--subtle-bg, var(--fg-color, #f9fafb));
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	padding: 16px;
+	text-align: center;
+}
+
+.vcm-metric-label {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+	color: var(--text-muted);
+	margin-bottom: 6px;
+}
+
+.vcm-metric-value {
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--text-color);
+	line-height: 1;
+}
+
+.vcm-metric-sub {
+	font-size: 11px;
+	color: var(--text-muted);
+	margin-top: 4px;
+}
+
+/* Rating breakdown bars */
+.vcm-rating-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.vcm-rating-label {
+	width: 110px;
+	font-size: 12px;
+	color: var(--text-muted);
+	flex-shrink: 0;
+}
+
+.vcm-rating-bar-track {
+	flex: 1;
+	height: 8px;
+	border-radius: 4px;
+	background: var(--border-color);
+	overflow: hidden;
+}
+
+.vcm-rating-bar-fill {
+	height: 100%;
+	border-radius: 4px;
+	transition: width 0.7s ease;
+}
+
+.vcm-rating-score {
+	width: 36px;
+	text-align: right;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-color);
+}
+
+/* Price history table in dialog */
+.vcm-history-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.vcm-history-table th {
+	text-align: left;
+	padding: 8px 12px;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+	color: var(--text-muted);
+	border-bottom: 1px solid var(--border-color);
+}
+
+.vcm-history-table td {
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--border-color);
+	color: var(--text-color);
+}
+
+.vcm-history-table tr:last-child td {
+	border-bottom: none;
+}
+
+.vcm-history-table tr:hover td {
+	background: var(--subtle-fg, rgba(59,130,246,0.04));
+}
+
+.vcm-price-change {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 2px 7px;
+	border-radius: 4px;
+}
+
+.vcm-price-change.up   { background: rgba(239,68,68,0.10);   color: #dc2626; }
+.vcm-price-change.down { background: rgba(16,185,129,0.10);  color: #059669; }
+.vcm-price-change.same { background: rgba(156,163,175,0.10); color: #6b7280; }
+
+/* ── Chart area in dialog ────────────────────────────────────────────────── */
+.vcm-mini-chart {
+	width: 100%;
+	height: 140px;
+	display: block;
+}
+
+.vcm-chart-title {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 10px;
+}
+
+/* ── Best-value row highlight ────────────────────────────────────────────── */
+.vcm-table tbody tr.vcm-best-row {
+	background: rgba(16, 185, 129, 0.04);
+}
+
+.vcm-table tbody tr.vcm-best-row td:first-child {
+	border-left: 3px solid #059669;
+	background: rgba(16, 185, 129, 0.04);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+	.vcm-hero { padding: 24px 20px; }
+	.vcm-metric-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+	.vcm-root { padding: 12px; }
+	.vcm-metric-grid { grid-template-columns: 1fr 1fr; }
+	.vcm-dialog-tabs { overflow-x: auto; }
+}
+
+/* ── Frappe dialog overrides ─────────────────────────────────────────────── */
+.modal-dialog.vcm-modal { max-width: 780px; }
+.modal-dialog.vcm-modal .modal-body { padding: 0; overflow: hidden; }
+.modal-dialog.vcm-modal .modal-header { display: none; }
+.modal-dialog.vcm-modal .modal-footer { border-top: 1px solid var(--border-color); }

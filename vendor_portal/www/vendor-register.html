@@ -1,0 +1,610 @@
+{% extends "templates/web.html" %}
+
+{% block title %}Vendor Registration | Vendor Portal{% endblock %}
+
+{% block head_include %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface2: #f1f5f9;
+    --border: #e2e8f0;
+    --accent: #4f46e5;
+    --accent2: #3b82f6;
+    --success: #10b981;
+    --error: #ef4444;
+    --text: #0f172a;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+  /* ── Header ── */
+  .vp-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .vp-logo { width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .vp-brand { font-size: 1.1rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .vp-nav-link { margin-left: auto; color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: opacity .2s; }
+  .vp-nav-link:hover { opacity: .75; }
+
+  /* ── Hero ── */
+  .vp-hero {
+    text-align: center; padding: 3.5rem 1rem 2rem;
+    background: radial-gradient(ellipse at 50% 0%, rgba(79,70,229,.08) 0%, transparent 70%);
+  }
+  .vp-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; background: linear-gradient(135deg, #0f172a 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .vp-hero p { color: var(--muted); margin-top: .75rem; font-size: .95rem; }
+
+  /* ── Step bar ── */
+  .step-bar { display: flex; justify-content: center; gap: .5rem; padding: 1.5rem 1rem; }
+  .step-dot { display: flex; flex-direction: column; align-items: center; gap: .35rem; cursor: default; }
+  .step-dot .dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600; color: var(--muted); background: var(--surface); transition: all .3s; }
+  .step-dot .label { font-size: .65rem; color: var(--muted); text-align: center; max-width: 60px; font-weight: 500; }
+  .step-dot.active .dot { border-color: var(--accent); background: var(--accent); color: #fff; box-shadow: 0 0 14px rgba(79,70,229,.3); }
+  .step-dot.done .dot { border-color: var(--success); background: var(--success); color: #fff; }
+  .step-connector { width: 40px; height: 2px; background: var(--border); margin-top: 15px; border-radius: 2px; flex-shrink: 0; transition: background .3s; }
+  .step-connector.done { background: var(--success); }
+
+  /* ── Form card ── */
+  .vp-card {
+    max-width: 760px; margin: 0 auto 3rem; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,.05), 0 8px 10px -6px rgba(0,0,0,.01);
+  }
+  .card-section-title {
+    background: var(--surface2);
+    padding: .85rem 1.5rem; font-size: .8rem; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent); border-bottom: 1px solid var(--border);
+  }
+  .form-step { display: none; padding: 1.75rem 1.5rem; }
+  .form-step.active { display: block; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  @media(max-width:560px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-grid.full { grid-template-columns: 1fr; }
+
+  .field-group { display: flex; flex-direction: column; gap: .45rem; }
+  .field-group label { font-size: .78rem; font-weight: 500; color: var(--muted); }
+  .field-group label .req { color: var(--accent); margin-left: 2px; }
+  .field-group input, .field-group select, .field-group textarea {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: .65rem .9rem; color: var(--text); font-size: .9rem; font-family: inherit;
+    transition: border-color .2s, box-shadow .2s; outline: none; width: 100%;
+  }
+  .field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,.15);
+  }
+  .field-group select option { background: var(--surface); color: var(--text); }
+  .field-group textarea { resize: vertical; min-height: 80px; }
+  .field-error { font-size: .72rem; color: var(--error); display: none; }
+  .field-group.invalid input, .field-group.invalid select, .field-group.invalid textarea { border-color: var(--error); }
+  .field-group.invalid .field-error { display: block; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: .75rem; justify-content: flex-end; padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface2); }
+  .btn { padding: .65rem 1.4rem; border-radius: 8px; font-size: .88rem; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-family: inherit; }
+  .btn-outline { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--surface2); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #6366f1); color: #fff; box-shadow: 0 4px 14px rgba(79,70,229,.25); }
+  .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-success { background: linear-gradient(135deg, var(--success), #059669); color: #fff; }
+
+  /* ── Alerts ── */
+  .vp-alert { border-radius: 10px; padding: .9rem 1.1rem; margin: 0 1.5rem 1rem; font-size: .88rem; font-weight: 500; display: flex; align-items: flex-start; gap: .6rem; }
+  .vp-alert-success { background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); color: #34d399; }
+  .vp-alert-error { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: #f87171; }
+  .vp-alert-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+  /* ── Review table ── */
+  .review-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .review-table td { padding: .55rem .75rem; border-bottom: 1px solid var(--border); }
+  .review-table td:first-child { color: var(--muted); width: 42%; }
+  .review-table td:last-child { color: var(--text); font-weight: 500; }
+
+  /* ── Success splash ── */
+  .success-splash { text-align: center; padding: 3rem 2rem; display: none; }
+  .success-splash.active { display: block; }
+  .success-icon { font-size: 4rem; margin-bottom: 1rem; animation: pop .5s ease; }
+  @keyframes pop { 0%{transform:scale(0)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+  .success-splash h2 { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: .75rem; }
+  .success-splash p { color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; }
+  .ref-badge { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: .5rem 1.2rem; font-size: .95rem; font-weight: 700; color: var(--accent); letter-spacing: .04em; }
+  .status-link { display: inline-block; margin-top: 1rem; color: var(--accent); text-decoration: none; font-size: .88rem; font-weight: 500; }
+  .status-link:hover { text-decoration: underline; }
+
+  /* ── Spinner ── */
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block page_content %}
+
+<!-- Header -->
+<header class="vp-header">
+  <div class="vp-logo">🏢</div>
+  <span class="vp-brand">Vendor Portal</span>
+  <a class="vp-nav-link" href="/vendor-status">Check Application Status →</a>
+</header>
+
+<!-- Hero -->
+<div class="vp-hero">
+  <h1>Become a Registered Vendor</h1>
+  <p>Complete the form below to submit your onboarding application. No account required.</p>
+</div>
+
+<!-- Step progress bar -->
+<div class="step-bar" id="stepBar">
+  <div class="step-dot active" id="dot-1"><div class="dot">1</div><div class="label">Company</div></div>
+  <div class="step-connector" id="conn-1"></div>
+  <div class="step-dot" id="dot-2"><div class="dot">2</div><div class="label">Address & Bank</div></div>
+  <div class="step-connector" id="conn-2"></div>
+  <div class="step-dot" id="dot-3"><div class="dot">3</div><div class="label">Documents</div></div>
+  <div class="step-connector" id="conn-3"></div>
+  <div class="step-dot" id="dot-4"><div class="dot">4</div><div class="label">Review</div></div>
+</div>
+
+<!-- Card -->
+<div class="vp-card">
+
+  <!-- Success splash (shown after submit) -->
+  <div class="success-splash" id="successSplash">
+    <div class="success-icon">🎉</div>
+    <h2>Application Submitted!</h2>
+    <p>Your vendor onboarding application has been received.<br>Our team will review it and reach out to your email.</p>
+    <p><strong>Your Application Reference:</strong></p>
+    <div class="ref-badge" id="refBadge">—</div>
+    <br>
+    <a class="status-link" href="/vendor-status">→ Track your application status</a>
+  </div>
+
+  <!-- Form (hidden after success) -->
+  <form id="vendorForm" novalidate>
+
+    <!-- Step 1: Company Info -->
+    <div class="form-step active" id="step1">
+      <div class="card-section-title">📋 Company Information</div>
+      <div style="padding:1.5rem 1.5rem 0">
+
+        <div id="formAlert"></div>
+
+        <div class="form-grid">
+          <div class="field-group" id="fg-supplier_name">
+            <label>Supplier / Vendor Name <span class="req">*</span></label>
+            <input type="text" id="supplier_name" name="supplier_name" placeholder="e.g. Ravi Enterprises">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-company_name">
+            <label>Company / Firm Name <span class="req">*</span></label>
+            <input type="text" id="company_name" name="company_name" placeholder="e.g. Ravi Enterprises Pvt. Ltd.">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-email">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="vendor@example.com">
+            <span class="field-error">Enter a valid email address.</span>
+          </div>
+          <div class="field-group" id="fg-phone">
+            <label>Phone Number <span class="req">*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-vendor_category">
+            <label>Vendor Category <span class="req">*</span></label>
+            <select id="vendor_category" name="vendor_category">
+              <option value="">— Select category —</option>
+              {% for cat in categories %}
+              <option value="{{ cat.name }}">{{ cat.category_name }}</option>
+              {% endfor %}
+            </select>
+            <span class="field-error">Please select a category.</span>
+          </div>
+          <div class="field-group" id="fg-gst_number">
+            <label>GST Number <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+            <input type="text" id="gst_number" name="gst_number" placeholder="e.g. 27AAAPL1234C1Z5" maxlength="15">
+            <span class="field-error">Invalid GST format (15 characters, e.g. 27AAAPL1234C1Z5).</span>
+          </div>
+          <div class="field-group" id="fg-pan_number">
+            <label>PAN Number <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+            <input type="text" id="pan_number" name="pan_number" placeholder="e.g. AAAPL1234C" maxlength="10">
+            <span class="field-error">Invalid PAN format (10 characters, e.g. AAAPL1234C).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Address & Bank -->
+    <div class="form-step" id="step2">
+      <div class="card-section-title">📍 Address & Banking Details</div>
+      <div style="padding:1.5rem 1.5rem 0">
+        <div class="form-grid">
+          <div class="field-group form-grid full" id="fg-address_line_1" style="grid-column:1/-1">
+            <label>Address Line 1 <span class="req">*</span></label>
+            <input type="text" id="address_line_1" name="address_line_1" placeholder="Street, Building, Area">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-city">
+            <label>City <span class="req">*</span></label>
+            <input type="text" id="city" name="city" placeholder="Mumbai">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-state">
+            <label>State <span class="req">*</span></label>
+            <input type="text" id="state" name="state" placeholder="Maharashtra">
+            <span class="field-error">This field is required.</span>
+          </div>
+          <div class="field-group" id="fg-pincode">
+            <label>Pincode</label>
+            <input type="text" id="pincode" name="pincode" placeholder="400001" maxlength="6">
+          </div>
+          <div class="field-group" id="fg-contact_person">
+            <label>Contact Person</label>
+            <input type="text" id="contact_person" name="contact_person" placeholder="Name of primary contact">
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem">
+          <div class="card-section-title" style="margin:0 -1.5rem 1rem;border-top:1px solid var(--border)">🏦 Bank Details <span style="text-transform:none;font-weight:400;font-size:.75rem;color:var(--muted)">(optional)</span></div>
+          <div class="form-grid">
+            <div class="field-group">
+              <label>Bank Name</label>
+              <input type="text" id="bank_name" name="bank_name" placeholder="State Bank of India">
+            </div>
+            <div class="field-group">
+              <label>Account Number</label>
+              <input type="text" id="bank_account_number" name="bank_account_number" placeholder="00001234567890">
+            </div>
+            <div class="field-group">
+              <label>IFSC Code</label>
+              <input type="text" id="ifsc_code" name="ifsc_code" placeholder="SBIN0001234">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Documents -->
+    <div class="form-step" id="step3">
+      <div class="card-section-title">📄 Required Documents</div>
+      <div style="padding:1.5rem 1.5rem 0">
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Please upload at least 2 required documents (e.g., GST Certificate, PAN Card, Bank Statement).</p>
+        <div id="document-rows" style="display:flex; flex-direction:column; gap: 1rem; margin-bottom: 1rem;">
+          <!-- dynamic rows will be appended here via JS -->
+        </div>
+        <button type="button" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.5rem 1rem;" onclick="addDocumentRow()">+ Add Another Document</button>
+        <div class="field-group" id="fg-documents" style="margin-top: 1rem;">
+          <span class="field-error">Please provide at least 2 valid documents (under 5MB each).</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Review & Submit -->
+    <div class="form-step" id="step4">
+      <div class="card-section-title">✅ Review Your Application</div>
+      <div style="padding:1.25rem 1.5rem">
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Please verify all details before submitting. You will receive a confirmation email at the address provided.</p>
+        <div id="reviewBlock"></div>
+      </div>
+    </div>
+
+    <!-- Button row -->
+    <div class="btn-row">
+      <button type="button" class="btn btn-outline" id="btnBack" style="display:none" onclick="goBack()">← Back</button>
+      <button type="button" class="btn btn-primary" id="btnNext" onclick="goNext()">Next Step →</button>
+      <button type="button" class="btn btn-success" id="btnSubmit" style="display:none" onclick="submitForm()">Submit Application</button>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+// ─────────────────────────────────────────────
+// Multi-step form controller
+// ─────────────────────────────────────────────
+let currentStep = 1;
+const TOTAL_STEPS = 4;
+let base64Documents = []; // Array of {filename, data, size}
+
+function showStep(n) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+
+  // Dots
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < n) dot.classList.add('done');
+    else if (i === n) dot.classList.add('active');
+  }
+  // Connectors
+  for (let i = 1; i < TOTAL_STEPS; i++) {
+    const c = document.getElementById('conn-' + i);
+    c.classList.toggle('done', i < n);
+  }
+
+  document.getElementById('btnBack').style.display = n > 1 ? '' : 'none';
+  document.getElementById('btnNext').style.display = n < TOTAL_STEPS ? '' : 'none';
+  document.getElementById('btnSubmit').style.display = n === TOTAL_STEPS ? '' : 'none';
+
+  if (n === TOTAL_STEPS) buildReview();
+}
+
+// ─── Validation helpers ───────────────────────
+function val(id) { return (document.getElementById(id) || {}).value?.trim() || ''; }
+function fg(id) { return document.getElementById('fg-' + id); }
+
+function markInvalid(id, msg) {
+  const g = fg(id);
+  if (!g) return;
+  g.classList.add('invalid');
+  const e = g.querySelector('.field-error');
+  if (e && msg) e.textContent = msg;
+}
+function markValid(id) { const g = fg(id); if (g) g.classList.remove('invalid'); }
+
+function validateStep(n) {
+  let ok = true;
+  clearAlert();
+
+  if (n === 1) {
+    ['supplier_name','company_name','phone','vendor_category'].forEach(f => {
+      if (!val(f)) { markInvalid(f); ok = false; } else markValid(f);
+    });
+    // Email
+    const em = val('email');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+    if (!em || !emailOk) { markInvalid('email', 'Enter a valid email address.'); ok = false; } else markValid('email');
+    // GST (optional)
+    const gst = val('gst_number');
+    if (gst && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gst.toUpperCase())) {
+      markInvalid('gst_number', 'Invalid GST format (e.g. 27AAAPL1234C1Z5)'); ok = false;
+    } else markValid('gst_number');
+    // PAN (optional)
+    const pan = val('pan_number');
+    if (pan && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan.toUpperCase())) {
+      markInvalid('pan_number', 'Invalid PAN format (e.g. AAAPL1234C)'); ok = false;
+    } else markValid('pan_number');
+  }
+
+  if (n === 2) {
+    ['address_line_1','city','state'].forEach(f => {
+      if (!val(f)) { markInvalid(f); ok = false; } else markValid(f);
+    });
+  }
+
+  if (n === 3) {
+    const rows = document.querySelectorAll('.doc-row');
+    let validFilesCount = 0;
+    let sizeOk = true;
+    
+    rows.forEach(row => {
+      const fileInput = row.querySelector('.doc-file');
+      if (fileInput.files.length > 0) {
+        validFilesCount++;
+        if (fileInput.files[0].size > 5 * 1024 * 1024) sizeOk = false;
+      }
+    });
+
+    if (validFilesCount < 2) {
+      markInvalid('documents', 'Please provide at least 2 documents.');
+      ok = false;
+    } else if (!sizeOk) {
+      markInvalid('documents', 'One or more files exceed the 5MB limit.');
+      ok = false;
+    } else {
+      markValid('documents');
+    }
+  }
+
+  return ok;
+}
+
+async function goNext() {
+  if (!validateStep(currentStep)) {
+    showAlert('Please correct the highlighted fields.', 'error');
+    return;
+  }
+  
+  if (currentStep === 3) {
+     await prepareDocuments();
+  }
+  
+  currentStep++;
+  showStep(currentStep);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function goBack() {
+  currentStep--;
+  showStep(currentStep);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ─── Document prep ────────────────────────────
+const docTypes = ["GST Certificate", "PAN Card", "Bank Statement", "Trade License", "MSME Certificate", "Other"];
+
+function addDocumentRow() {
+  const container = document.getElementById('document-rows');
+  const div = document.createElement('div');
+  div.className = 'doc-row';
+  div.style.cssText = 'display:flex; gap:1rem; align-items:end; background:var(--surface2); padding:1rem; border-radius:8px; border:1px solid var(--border);';
+  
+  const typeOptions = docTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+  
+  div.innerHTML = `
+    <div class="field-group" style="flex:1;">
+      <label>Document Type</label>
+      <select class="doc-type">
+        ${typeOptions}
+      </select>
+    </div>
+    <div class="field-group" style="flex:1;">
+      <label>File</label>
+      <input type="file" class="doc-file" accept=".pdf,.png,.jpg,.jpeg">
+    </div>
+    <button type="button" class="btn btn-outline" style="padding:0.65rem 1rem; color:var(--error); border-color:var(--error); height:42px; margin-bottom:2px;" onclick="this.parentElement.remove()">✖</button>
+  `;
+  container.appendChild(div);
+}
+
+function prepareDocuments() {
+  return new Promise((resolve) => {
+    const rows = Array.from(document.querySelectorAll('.doc-row'));
+    base64Documents = [];
+    
+    // Filter out rows that have no file selected
+    const validRows = rows.filter(r => r.querySelector('.doc-file').files.length > 0);
+    
+    if (validRows.length === 0) {
+      resolve(); return;
+    }
+    
+    let loaded = 0;
+    validRows.forEach(row => {
+      const type = row.querySelector('.doc-type').value;
+      const fileInput = row.querySelector('.doc-file');
+      const file = fileInput.files[0];
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const parts = e.target.result.split(',');
+        base64Documents.push({
+          document_type: type,
+          filename: file.name,
+          data: parts[1] || parts[0]
+        });
+        loaded++;
+        if (loaded === validRows.length) resolve();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
+// ─── Review builder ───────────────────────────
+function buildReview() {
+  const rows = [
+    ['Supplier Name', val('supplier_name')],
+    ['Company Name', val('company_name')],
+    ['Email', val('email')],
+    ['Phone', val('phone')],
+    ['Vendor Category', val('vendor_category')],
+    ['GST Number', val('gst_number') || '—'],
+    ['PAN Number', val('pan_number') || '—'],
+    ['Address', val('address_line_1')],
+    ['City / State', [val('city'), val('state')].filter(Boolean).join(', ')],
+    ['Pincode', val('pincode') || '—'],
+    ['Contact Person', val('contact_person') || '—'],
+    ['Bank Name', val('bank_name') || '—'],
+    ['Account Number', val('bank_account_number') || '—'],
+    ['IFSC Code', val('ifsc_code') || '—'],
+    ['Documents Attached', `${base64Documents.length} file(s)`],
+  ];
+  const html = '<table class="review-table">' +
+    rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('') +
+    '</table>';
+  document.getElementById('reviewBlock').innerHTML = html;
+}
+
+// ─── Submit ───────────────────────────────────
+function submitForm() {
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+  const payload = {
+    supplier_name: val('supplier_name'),
+    company_name: val('company_name'),
+    email: val('email'),
+    phone: val('phone'),
+    vendor_category: val('vendor_category'),
+    gst_number: val('gst_number'),
+    pan_number: val('pan_number'),
+    address_line_1: val('address_line_1'),
+    city: val('city'),
+    state: val('state'),
+    pincode: val('pincode'),
+    contact_person: val('contact_person'),
+    bank_name: val('bank_name'),
+    bank_account_number: val('bank_account_number'),
+    ifsc_code: val('ifsc_code'),
+    documents: JSON.stringify(base64Documents),
+  };
+
+  frappe.call({
+    method: 'vendor_portal.vendor_portal.www.portal_api.submit_vendor_application',
+    args: payload,
+    callback: function(r) {
+      if (r && r.message && r.message.application_id) {
+        document.getElementById('vendorForm').style.display = 'none';
+        document.getElementById('refBadge').textContent = r.message.application_id;
+        document.getElementById('successSplash').classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Application';
+        showAlert((r && r.message && r.message.error) || 'Submission failed. Please try again.', 'error');
+      }
+    },
+    error: function(err) {
+      btn.disabled = false;
+      btn.innerHTML = 'Submit Application';
+      const msg = (err && err._server_messages)
+        ? JSON.parse(err._server_messages).map(m => { try { return JSON.parse(m).message; } catch(e){ return m; } }).join(' ')
+        : 'Submission failed. Please try again.';
+      showAlert(msg, 'error');
+    }
+  });
+}
+
+// ─── Alert helpers ────────────────────────────
+function showAlert(msg, type) {
+  const icon = type === 'error' ? '⚠️' : '✅';
+  const cls = type === 'error' ? 'vp-alert-error' : 'vp-alert-success';
+  document.getElementById('formAlert').innerHTML =
+    `<div class="vp-alert ${cls}"><span class="vp-alert-icon">${icon}</span><span>${msg}</span></div>`;
+}
+function clearAlert() { document.getElementById('formAlert').innerHTML = ''; }
+
+// ─── Category loader fallback ─────────────────
+// If the server-side Jinja loop rendered 0 <option> tags (permission issue
+// on older cache), re-fetch via the guest API and populate the select.
+function loadCategories() {
+  const sel = document.getElementById('vendor_category');
+  // Count real options (excluding the placeholder)
+  const realOpts = Array.from(sel.options).filter(o => o.value !== '').length;
+  if (realOpts > 0) return; // already populated by Jinja — nothing to do
+
+  frappe.call({
+    method: 'vendor_portal.vendor_portal.www.portal_api.get_vendor_categories',
+    callback: function(r) {
+      if (!r || !r.message || !r.message.length) return;
+      // Clear all options except placeholder
+      while (sel.options.length > 1) sel.remove(1);
+      r.message.forEach(function(cat) {
+        const opt = document.createElement('option');
+        opt.value = cat.name;
+        opt.textContent = cat.category_name;
+        sel.appendChild(opt);
+      });
+    }
+  });
+}
+
+// Init
+showStep(1);
+loadCategories();
+
+// Add initial document rows
+addDocumentRow();
+addDocumentRow();
+</script>
+{% endblock %}

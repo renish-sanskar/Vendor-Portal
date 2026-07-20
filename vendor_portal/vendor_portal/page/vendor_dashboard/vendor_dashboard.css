@@ -1,0 +1,124 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Vendor Dashboard — page-level styles
+   Frappe page CSS is loaded automatically when the page is opened.
+   Uses Frappe CSS variables for seamless light/dark theme support.
+   ──────────────────────────────────────────────────────────────────── */
+
+.vendor-dashboard {
+	padding: 20px;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+/* ── KPI Strip ─────────────────────────────────────────────────────── */
+
+.kpi-strip {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 16px;
+	margin-bottom: 28px;
+}
+
+.kpi-card {
+	background: var(--card-bg);
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	padding: 20px;
+	text-align: center;
+	box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
+	transition: box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+	box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+.kpi-label {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: var(--text-muted);
+	margin-bottom: 8px;
+}
+
+.kpi-value {
+	font-size: 28px;
+	font-weight: 700;
+	color: var(--text-color);
+	line-height: 1;
+}
+
+/* ── Chart Grid ─────────────────────────────────────────────────────── */
+
+.chart-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.chart-card {
+	background: var(--card-bg);
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
+}
+
+.chart-card.wide {
+	grid-column: 1 / -1;
+}
+
+.chart-header {
+	margin-bottom: 16px;
+}
+
+.chart-header h4 {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--heading-color);
+}
+
+.chart-subtitle {
+	font-size: 11px;
+	color: var(--text-muted);
+}
+
+.chart-wrapper {
+	min-height: 280px;
+	/* Ensure chart text inherits theme colors */
+	color: var(--text-color);
+}
+
+/* ── frappe-charts overrides for theme compatibility ────────────────── */
+
+.chart-wrapper svg text {
+	fill: var(--text-color) !important;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+	.kpi-strip {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.chart-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.chart-card.wide {
+		grid-column: 1;
+	}
+}
+
+@media (max-width: 500px) {
+	.kpi-strip {
+		grid-template-columns: 1fr;
+	}
+
+	.vendor-dashboard {
+		padding: 12px;
+	}
+}
